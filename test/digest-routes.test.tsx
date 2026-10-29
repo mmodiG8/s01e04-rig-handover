@@ -196,8 +196,8 @@ describe('digest page /digest/:night', () => {
     const app = appFor(runsDirWith({ '2026-10-28.jsonl': mainNight }));
     const html = await (await app.request('/digest/2026-10-28')).text();
 
-    expect(rowHtml(html, 'backup-db')).toContain('—');
-    expect(rowHtml(html, 'sync-invoices')).not.toContain('—');
+    expect(rowHtml(html, 'backup-db')).toMatch(/<td>backup-db<\/td><td>—<\/td>/);
+    expect(rowHtml(html, 'sync-invoices')).toMatch(/<td>sync-invoices<\/td><td>ana<\/td>/);
   });
 
   it('keeps the original timestamp offsets and compares instants, not strings', async () => {
