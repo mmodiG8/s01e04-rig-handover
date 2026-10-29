@@ -1,6 +1,6 @@
 ---
 plan: morning-digest
-status: ready
+status: done
 owner: rook
 opened: 2026-10-29
 ---
@@ -77,3 +77,22 @@ page again with `LANE_MARKER` unset (the banner reads "no marker set") and uploa
 link. Move this plan to `docs/plans/done/` with its issue list.
 
 Done when: the preview link no longer shows the lane marker.
+
+## Issues and completion
+
+| Issue | Plan section |
+|---|---|
+| [#1 Shared digest types](https://github.com/mmodiG8/s01e04-rig-handover/issues/1) | 1 |
+| [#2 Run log reader](https://github.com/mmodiG8/s01e04-rig-handover/issues/2) | 1 |
+| [#3 Digest HTML page](https://github.com/mmodiG8/s01e04-rig-handover/issues/3) | 2a |
+| [#4 Digest JSON](https://github.com/mmodiG8/s01e04-rig-handover/issues/4) | 2b |
+| [#5 Board links](https://github.com/mmodiG8/s01e04-rig-handover/issues/5) | 2c |
+| [#6 Route tests](https://github.com/mmodiG8/s01e04-rig-handover/issues/6) | 2d |
+| [#7 Review preview](https://github.com/mmodiG8/s01e04-rig-handover/issues/7) | 3 |
+| [#8 Preview cleanup](https://github.com/mmodiG8/s01e04-rig-handover/issues/8) | 4 |
+
+The course confirmed that the reviewer had seen the marked preview before cleanup.
+The human separately approved replacing it. The same
+[public preview URL](https://mmodig8.github.io/s01e04-rig-handover/) was then replaced
+with a new command-exported copy. A public fetch confirmed "no marker set" and the
+old marker's absence before this plan was archived.

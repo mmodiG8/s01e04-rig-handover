@@ -37,7 +37,8 @@ before the first run. It never commits the HTML or `.env`; its deployment artifa
 after one day.
 
 Obtain human approval before publication. Supply the course marker through the workflow's
-`lane_marker` input, never a commit or issue. After the review is in, obtain separate human
+`lane_marker` input, never a commit or issue. Keep the preview issue open until the reviewer
+confirms they have looked; sending the link is not review completion. After the review is in, obtain separate human
 approval and run the same workflow with that input empty. Verify the same public URL says
 "no marker set" and no longer contains the old marker before closing the cleanup issue.
 Do not upload the HTML to issues or chat attachments.
