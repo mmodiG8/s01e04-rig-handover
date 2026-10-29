@@ -1,0 +1,61 @@
+name: Publish digest preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      lane_marker:
+        description: Public lane marker; leave empty only for approved cleanup after review
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: digest-preview
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: |
+          npm install --prefix "$RUNNER_TEMP/tooling" pnpm@10.34.9 --no-audit --no-fund
+          "$RUNNER_TEMP/tooling/node_modules/.bin/pnpm" install --frozen-lockfile
+      - name: Check service
+        run: |
+          "$RUNNER_TEMP/tooling/node_modules/.bin/pnpm" test
+          "$RUNNER_TEMP/tooling/node_modules/.bin/pnpm" typecheck
+      - name: Export the running service's digest
+        env:
+          PORT: '8787'
+          LANE_ID: lane-07
+          LANE_MARKER: ${{ inputs.lane_marker }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/digest-preview"
+          node --import tsx src/server.ts >"$RUNNER_TEMP/rig.log" 2>&1 &
+          rig_pid=$!
+          trap 'kill "$rig_pid"; wait "$rig_pid" || true' EXIT
+          curl --fail --silent --show-error --retry 20 --retry-delay 1 --retry-connrefused \
+            http://127.0.0.1:8787/health --output /dev/null
+          curl --fail --silent --show-error http://127.0.0.1:8787/digest/2026-10-28 \
+            --output "$RUNNER_TEMP/digest-preview/index.html"
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: ${{ runner.temp }}/digest-preview
+          retention-days: 1
+      - name: Deploy the preview
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
