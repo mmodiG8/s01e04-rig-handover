@@ -44,6 +44,7 @@ jobs:
           LANE_MARKER: ${{ inputs.lane_marker }}
         run: |
           mkdir -p "$RUNNER_TEMP/digest-preview"
+          if [ -z "$LANE_MARKER" ]; then unset LANE_MARKER; fi
           node --import tsx src/server.ts >"$RUNNER_TEMP/rig.log" 2>&1 &
           rig_pid=$!
           trap 'kill "$rig_pid"; wait "$rig_pid" || true' EXIT
